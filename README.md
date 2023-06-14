@@ -6,11 +6,11 @@ BeamNG.tech provides an out-of-the-box solution for gathering segmentation data 
 
 Base Image:
 
-<img src="images/track.png"  width="40%" height="40%">
+<img src="images/track.PNG"  width="40%" height="40%">
 
 Image with Exposed Track:
 
-<img src="images/no_track.png"  width="40%" height="40%">
+<img src="images/no_track.PNG"  width="40%" height="40%">
 
 _Note: The majority of this readme is a rehash of what is in the ipynb. For a better understanding, look at `bngseg.ipynb`. If there are any discrepancies, this readme and the `bngseg` package are more up-to-date. If confused, the notebook might be helpful._
 
