@@ -1,6 +1,7 @@
 from beamngpy import Vehicle
 from beamngpy.sensors import Camera
 from pathlib import Path
+from tqdm import tqdm
 import beamngpy
 import time
 import random
@@ -37,7 +38,12 @@ def generate_random_point(points, radius=4):  # not optimized
 
 def attach_cameras(
     camera_positions: list[
-        tuple[tuple[float, float, float], tuple[float, float, float], tuple[float, float, float], float
+        tuple[
+            tuple[float, float, float],
+            tuple[float, float, float],
+            tuple[float, float, float],
+            float,
+        ]
     ],
     bng,
     v: Vehicle,
@@ -46,7 +52,7 @@ def attach_cameras(
 ):
     """Attach cameras to vehicle in BeamNG instance. `camera_positions` are tuples with position, direction, up, and fov [pos, dir, and up in (x, y, z) format, fov a number]."""
     cameras = []
-    for i, (pos, dir) in enumerate(camera_positions):
+    for i, (pos, dir, up, fov) in enumerate(camera_positions):
         camera = Camera(
             "camera" + str(i),
             bng,
@@ -67,14 +73,15 @@ def attach_cameras(
     return cameras
 
 
-def generate_images(v: Vehicle, locations, cameras, annotated=False, verbose=True):
+def generate_images(
+    v: Vehicle,
+    locations,
+    cameras,
+    annotated=False,
+):
     """Generate images given vehicle, locations, and cameras. Set `annotated` to True if generating annotated images."""
     images = {}
-    if verbose:
-        print("Generating {} total images".format(len(locations)))
-    for i, (pos, dir) in enumerate(locations):
-        if verbose:
-            print("Grabbing image " + str(i) + "...")
+    for i, (pos, dir) in tqdm(enumerate(locations), desc="Images:"):
         v.teleport(pos, rot_quat=dir)
         for j, cam in enumerate(cameras):
             base_image = cam.get_full_poll_request()[
