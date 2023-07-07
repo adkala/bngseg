@@ -1,5 +1,6 @@
 from beamngpy import BeamNGpy, Scenario, Vehicle
 import pickle
+import matplotlib.pyplot as plt
 
 
 def quick_start(home_dir, user_dir, ip="localhost", port="64526"):
@@ -42,3 +43,11 @@ def save_image_generation_info(camera_positions, car_positions, path):
         f.write("\n# locations")
         for pos, i in enumerate(car_positions):
             f.write("%i: %s\n" % (i, str(pos)))
+
+
+def poll_and_show_images(camera):
+    images = camera.get_full_poll_request()
+    fig, ax = plt.subplots(1, 2)
+    ax[0].imshow(images["colour"])
+    ax[1].imshow(images["annotation"])
+    plt.show()
