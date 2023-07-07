@@ -19,8 +19,8 @@ user_dir = r"C:\Users\jazzy\Desktop\BeamNG"
 
 # Scenario variables
 map = "rb_ks_monza"
-car_model = "etk800"
-start_pos = (-177.105, -107.766, 154.945)
+car_model = "2022__4_navaro_ssr_700_indycar"
+start_pos = (-177.105, -106.766, 155.2)
 start_rot_quat = (0, 0, -0.998, 0.0598)
 
 # Number of images to capture
