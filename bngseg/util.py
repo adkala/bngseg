@@ -27,7 +27,7 @@ def quick_scenario(
 
 def serialize_points(points: list, path="points.bin"):
     with open(path, "wb") as outp:
-        pickle.dumps(points, outp, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(points, outp, pickle.HIGHEST_PROTOCOL)
 
 
 def deserialize_points(path="points.bin"):
