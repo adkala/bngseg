@@ -47,8 +47,8 @@ def attach_cameras(
     ],
     bng,
     v: Vehicle,
-    near_far_planes=(0.1, 100),
-    resolution=(1024, 1024),
+    near_far_planes=(0.1, 1000),
+    resolution=(224, 224),
 ):
     """Attach cameras to vehicle in BeamNG instance. `camera_positions` are tuples with position, direction, up, and fov [pos, dir, and up in (x, y, z) format, fov a number]."""
     cameras = []
