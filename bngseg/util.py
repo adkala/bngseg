@@ -11,14 +11,21 @@ def quick_start(home_dir, user_dir, ip="localhost", port="64526"):
 
 
 def quick_scenario(
-    bng, map, car_model, start_pos, start_rot_quat=(0, 0, 0, 0), scenario_name="quick"
+    bng,
+    map,
+    car_model,
+    start_pos,
+    start_rot_quat=(0, 0, 0, 0),
+    scenario_name="quick",
+    new_scenario=True,
 ):
     """Convenience function for creating scenario. Returns scenario and spawned car."""
     scenario = Scenario(map, scenario_name)
     car0 = Vehicle("car0", model=car_model)
     scenario.add_vehicle(car0, pos=start_pos, rot_quat=start_rot_quat)
 
-    scenario.make(bng)
+    if new_scenario:
+        scenario.make(bng)
     bng.scenario.load(scenario)
     bng.scenario.start()
 
