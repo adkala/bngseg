@@ -1,0 +1,25 @@
+# working car models default from BeamNG:
+default_car_models = [
+    'autobello',
+    'bolide',
+    'barstow',
+    'bastion',
+    'bluebuck',
+    'coupe',
+    'covet',
+    'etk800',
+    'etkc',
+    'legran',
+    'miramar',
+    'moonhawk',
+    'pessima',
+    'pickup',
+    'pigeon',
+    'racetruck',
+    'roamer',
+    'sbr',
+    'scintilla',
+    'sunburst',
+    'wendover',
+    'wigeon'
+]
