@@ -21,8 +21,11 @@ def quick_scenario(
 ):
     """Convenience function for creating scenario. Returns scenario and spawned car."""
     scenario = Scenario(map, scenario_name)
-    car0 = Vehicle("car0", model=car_model)
-    scenario.add_vehicle(car0, pos=start_pos, rot_quat=start_rot_quat)
+    if car_model:
+        car0 = Vehicle("car0", model=car_model)
+        scenario.add_vehicle(car0, pos=start_pos, rot_quat=start_rot_quat)
+    else:
+        car0 = None
 
     if new_scenario:
         scenario.make(bng)

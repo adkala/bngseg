@@ -1,33 +1,43 @@
 import random
-        
+import pickle
+
+class HistoryState:
+    def __init__(self, car, location, camera_positions):
+        self.car = car
+        self.location = location
+        self.camera_positions = camera_positions
+
+    def __getstate__(self):
+        return (self.car, self.location, self.camera_positions)
+
+    def __setstate__(self, i):
+        self.car = i[0]
+        self.location = i[1]
+        self.camera_positions = i[2]
+
+    def __repr__(self):
+        return str(self.__getstate__())
+
 class CameraPosition:
     def __init__(self, pos, dir, up, fov=70, near_far_planes=(0.1, 1000), resolution=(224, 224), random=False):
         if random:
-            if not (valid_random(pos) and valid_random(dir) and valid_random(up)):
-                raise Exception("Coordinates not in valid format for random generation (lower_bound, upper_bound).")
+            raise Exception("Random camera positions currently not supported.")
         self.pos = pos
         self.dir = dir
         self.up = up
+        self.fov = fov
+        self.near_far_planes = near_far_planes
+        self.resolution = resolution
+        self.random = random
+            
     
     def __call__(self):
-        if random:
-            pos = _generate_coor(*self.pos)
-            dir = _generate_coor(*self.dir)
-            up = _generate_coor(*self.up)
-        return (pos, dir, up)
-
-    def _valid_random(coor):
-        return len(coor) == 2 and isinstance(coor[0], (tuple, list))
-
-    def _generate_coor(lower, upper):
-        return (random.uniform(lower[0], upper[0]), random.uniform(lower[1], upper[1]), random.uniform(lower[2], upper[2]))
-
+        return (self.pos, self.dir, self.up, self.fov, self.near_far_planes, self.resolution)
 
 class AnnotationCar:
     def __init__(self, car_model, camera_positions):
         self.car_model = car_model
         self.camera_positions = camera_positions
-
 
 class AnnotationScenarioHistory:
     def __init__(self, base_map, annotated_map):
@@ -36,7 +46,7 @@ class AnnotationScenarioHistory:
         self.locations = []
 
     def add(self, car, location, camera_positions):
-        state = (car, location, camera_positions)
+        state = HistoryState(car, location, camera_positions)
         self.locations.append(state)
         return state
 
@@ -44,13 +54,15 @@ class AnnotationScenarioHistory:
         if not path:
             prefix = ""
         else:
-            prefix = path + r"\"
-        path = prefix + ("%s_%s_%i" % (self.base_map, self.car, len(self.locations)))
-        pickle.dump(self, path, protocol=0)
+            prefix = path + "\\"
+        path = prefix + ("%s_%i.bin" % (self.base_map, len(self.locations)))
+        with open(path, 'wb') as fp:
+            pickle.dump(self, fp, protocol=pickle.HIGHEST_PROTOCOL)
     
     def load(path):
-        return pickle.load(path)
-
+        with open(path, 'rb') as fp:
+            return pickle.load(fp)
+        
 
 class AnnotationScenario:
     def __init__(self, base_map, annotated_map, cars: list[AnnotationCar], locations):
@@ -58,24 +70,18 @@ class AnnotationScenario:
         self.annotated_map = annotated_map
         self.cars = cars
         self.locations = locations
-        
+
         self.history = AnnotationScenarioHistory(base_map, annotated_map)
+        
+        car_counter = 0
+        loc_counter = 0
+        
+        while car_counter < len(self.cars):
+            self.history.add(self.cars[car_counter].car_model, locations[loc_counter], [cam() for cam in self.cars[car_counter].camera_positions])
+            
+            if loc_counter < len(locations) - 1:
+                loc_counter += 1
+            else:
+                loc_counter = 0
+                car_counter += 1
 
-        self.car_counter = 0
-        self.loc_counter = 0
-
-    def __iter__(self):
-        return self
-
-    def __next__():
-        if self.loc_counter < len(locations):
-            location = locations[self.loc_counter]
-            self.loc_counter += 1
-        else:
-            self.loc_counter = 0
-            self.car_counter += 1
-
-        if self.car_counter < len(self.cars):
-            return self.history.add(self.cars[car_counter].car_model, location, [cam() for cam in self.cars[car_counter].camera_positions])
-        else:
-            raise StopIteration

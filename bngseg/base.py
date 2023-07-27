@@ -7,6 +7,8 @@ import time
 import random
 import datetime
 
+from .annotation import AnnotationScenarioHistory
+
 
 def record_points_from_car(v: Vehicle, interval=1, countdown=True):
     """Record points in simulator given vehicle. Interval is in seconds."""
@@ -130,4 +132,4 @@ def generate_paired_images_and_save(
     annotated_images = generate_images(
         v, locations, cameras, annotated=True, verbose=verbose
     )
-    return save_images(pair_images(base_images, annotated_images), path=path)
+    return save_images(pair_images(base_images, annotated_images), path=path)    
